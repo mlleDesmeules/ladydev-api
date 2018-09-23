@@ -32,7 +32,7 @@ $config = [
 	],
 	"modules"    => [
 		'v1' => [
-			'class' => 'app\modules\v1\module',
+			'class' => 'app\modules\v1\Module',
 		],
 	],
 	'components' => [
