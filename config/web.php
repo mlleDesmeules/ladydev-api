@@ -26,9 +26,9 @@ $config = [
 	'aliases'    => [
 		'@bower'  => '@vendor/bower-asset',
 		'@npm'    => '@vendor/npm-asset',
-		"@v1"     => "/app/modules/v1",
-		"@models" => "/app/models",
-		"@upload" => "/app/web/upload",
+		"@v1"     => dirname(__DIR__) . "/modules/v1",
+		"@models" => dirname(__DIR__) . "/models",
+		"@upload" => dirname(__DIR__) . "/web/upload",
 	],
 	"modules"    => [
 		'v1' => [

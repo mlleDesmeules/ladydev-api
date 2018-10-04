@@ -30,3 +30,6 @@ tests/_output/*
 tests/_support/_generated
 **/tests/_output/*
 **/tests/_support/_generated
+
+# ignore .vagrant folder
+.vagrant
