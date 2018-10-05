@@ -55,7 +55,7 @@ class PostEx extends Post
 			"summary"         => function ( self $model ) { return $model->postLang->summary; },
 			"cover"           => function ( self $model ) {
 				return [
-					"url" => (isset($model->postLang->file)) ? $model->postLang->file->getFullPath() : "",
+					"url" => ($model->postLang->hasFile()) ? $model->postLang->file->getFullPath() : "",
 					"alt" => $model->postLang->file_alt,
 				];
 			},

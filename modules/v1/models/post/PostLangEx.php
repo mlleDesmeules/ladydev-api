@@ -33,4 +33,9 @@ class PostLangEx extends PostLang
 	{
 		return PostCommentEx::getCommentCountForPost($this->post_id);
 	}
+
+	public function hasFile()
+	{
+		return (!is_null($this->file) && !empty($this->file));
+	}
 }

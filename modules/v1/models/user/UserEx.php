@@ -11,24 +11,20 @@ use app\models\user\User;
  */
 class UserEx extends User
 {
+	/** @inheritdoc */
+	public function getUserProfile()
+	{
+		return $this->hasOne(UserProfileEx::className(), [ "user_id"  => "id" ]);
+	}
+
 	public function fields ()
 	{
 		return [
 			"id",
-			"fullname"  => function ( self $model ) { return $model->getFullname(); },
+			"fullname"  => function ( self $model ) { return $model->userProfile->getFullname(); },
 			"firstname" => function ( self $model ) { return $model->userProfile->firstname; },
 			"lastname"  => function ( self $model ) { return $model->userProfile->lastname; },
-			"picture"   => function ( self $model ) { return $model->userProfile->file->getFullPath(); },
+			"picture"   => function ( self $model ) { return ($model->userProfile->hasProfilePicture()) ? $model->userProfile->file->getFullPath() : ""; },
 		];
-	}
-
-	/**
-	 * Return the user's full name.
-	 *
-	 * @return string
-	 */
-	public function getFullname ()
-	{
-		return "{$this->userProfile->firstname} {$this->userProfile->lastname}";
 	}
 }
