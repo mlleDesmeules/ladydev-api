@@ -15,14 +15,9 @@ use Yii;
  */
 abstract class PostStatusBase extends \yii\db\ActiveRecord
 {
-	const DRAFT       = 1;
-	const UNPUBLISHED = 2;
-	const PUBLISHED   = 3;
-	const ARCHIVED    = 4;
-
 	/** @inheritdoc */
 	public static function tableName () { return 'post_status'; }
-	
+
 	/** @inheritdoc */
 	public function rules ()
 	{
@@ -32,7 +27,7 @@ abstract class PostStatusBase extends \yii\db\ActiveRecord
 			[ "name", "unique" ],
 		];
 	}
-	
+
 	/** @inheritdoc */
 	public function attributeLabels ()
 	{
@@ -41,13 +36,13 @@ abstract class PostStatusBase extends \yii\db\ActiveRecord
 			'name' => Yii::t('app.post', 'Name'),
 		];
 	}
-	
+
 	/** @return \yii\db\ActiveQuery */
 	public function getPosts ()
 	{
 		return $this->hasMany(Post::className(), [ 'post_status_id' => 'id' ]);
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 * @return PostStatusQuery the active query used by this AR class.
