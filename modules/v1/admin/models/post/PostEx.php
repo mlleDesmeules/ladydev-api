@@ -15,11 +15,7 @@ use app\modules\v1\admin\models\tag\AssoTagPostEx;
  *
  * @package app\modules\v1\admin\models\post
  *
- * @SWG\Definition(
- *     definition = "PostList",
- *     type = "array",
- *     @SWG\Items( ref = "#/definitions/Post" )
- * )
+ * @SWG\Definition(definition="PostList", type="array", @SWG\Items(ref="#/definitions/Post"))
  *
  * @property array $translations
  */
@@ -28,28 +24,43 @@ class PostEx extends Post
 	/** @var array  */
 	public $translations = [];
 
-	/** @inheritdoc */
-	public function getPostLangs ()
+	/**
+	 * @inheritdoc
+	 *
+	 * @SWG\Definition(definition="Translations", type="array", @SWG\Items(ref="#/definitions/PostTranslation"))
+	 */
+	public function getPostLangs()
 	{
-		return $this->hasMany(PostLangEx::className(), [ "post_id" => "id" ]);
+		return $this->hasMany(PostLangEx::class, [ "post_id" => "id" ]);
+	}
+
+	/**
+	 * @inheritdoc
+	 *
+	 * @SWG\Definition(definition="PostLinks", type="array", @SWG\Items(ref="#/definitions/PostLink"))
+	 */
+	public function getPostLinks()
+	{
+		return $this->hasMany(PostLinkEx::class, [ "post_id" => "id" ]);
 	}
 
 	/**
 	 * @inheritdoc
 	 *
 	 * @SWG\Definition(
-	 *     definition = "Post",
+	 *     	definition = "Post",
 	 *
-	 *     @SWG\Property( property = "id", type = "integer" ),
-	 *     @SWG\Property( property = "category_id", type = "integer" ),
-	 *     @SWG\Property( property = "post_status_id", type = "integer" ),
-	 *     @SWG\Property( property = "is_featured", type = "integer" ),
-	 *     @SWG\Property( property = "translations", type = "array", @SWG\Items( ref = "#/definitions/PostTranslation" ) ),
-	 *     @SWG\Property( property = "created_on", type = "string" ),
-	 *     @SWG\Property( property = "updated_on", type = "string" ),
+	 *     	@SWG\Property(property="id", type="integer"),
+	 *     	@SWG\Property(property="category_id", type="integer"),
+	 *     	@SWG\Property(property="post_status_id", type="integer"),
+	 *     	@SWG\Property(property="is_featured", type="integer"),
+	 *     	@SWG\Property(property="translations", ref="#/definitions/Translations" ),
+	 * 		@SWG\Property(property="links", ref="#/definitions/PostLinks"),
+	 *     	@SWG\Property(property="created_on", type="string"),
+	 *     	@SWG\Property(property="updated_on", type="string"),
 	 * )
 	 */
-	public function fields ()
+	public function fields()
 	{
 		return [
 			"id",
@@ -58,6 +69,7 @@ class PostEx extends Post
 			"is_featured",
 			"is_comment_enabled",
 			"translations" => "postLangs",
+			"links"		   => "postLinks",
 			"created_on"   => function ( self $model ) { return DateHelper::formatDate($model->created_on); },
 			"updated_on"   => function ( self $model ) { return DateHelper::formatDate($model->updated_on); },
 		];
@@ -70,13 +82,13 @@ class PostEx extends Post
 	 *     definition = "PostForm",
 	 *     required   = { "category_id", "translations" },
 	 *
-	 *     @SWG\Property( property = "category_id", type = "integer" ),
-	 *     @SWG\Property( property = "post_status_id", type = "integer" ),
-	 *     @SWG\Property( property = "is_featured", type = "integer" ),
-	 *     @SWG\Property( property = "translations", type = "array", @SWG\Items( ref = "#/definitions/PostTranslationForm" ) ),
+	 *     	@SWG\Property(property="category_id", type="integer"),
+	 *     	@SWG\Property(property="post_status_id", type="integer"),
+	 *     	@SWG\Property(property="is_featured", type="integer"),
+	 *     	@SWG\Property(property="translations", type="array", @SWG\Items( ref = "#/definitions/PostTranslationForm" )),
 	 * )
 	 */
-	public function rules ()
+	public function rules()
 	{
 		return [
 			[ "category_id", "required", "message" => self::ERR_FIELD_REQUIRED ],
@@ -113,7 +125,7 @@ class PostEx extends Post
 	 *
 	 * @return array
 	 */
-	public static function createWithTranslations ( $post, $translations )
+	public static function createWithTranslations($post, $translations)
 	{
 		//  start a transaction to rollback at any moment if there is a problem
 		$transaction = self::$db->beginTransaction();
@@ -157,7 +169,7 @@ class PostEx extends Post
 	 *
 	 * @return array
 	 */
-	public static function deleteWithTranslations ( $postId )
+	public static function deleteWithTranslations($postId)
 	{
 		//  set the $db property
 		self::defineDbConnection();
@@ -208,15 +220,17 @@ class PostEx extends Post
 	 *
 	 * @return PostEx[]|array
 	 */
-	public static function getAllWithTranslations ( $filters )
+	public static function getAllWithTranslations($filters)
 	{
-		$query = self::find()->withTranslations();
+		$query = self::find()
+						->withTranslations()
+						->with("postLinks");
 
-		if ( PostStatusEx::idExists($filters[ "status" ]) ) {
+		if (PostStatusEx::idExists($filters[ "status" ])) {
 			$query->status($filters[ "status" ]);
 		}
 
-		if ( LangEx::idExists($filters[ "language" ]) ) {
+		if (LangEx::idExists($filters[ "language" ])) {
 			$query->withTranslationIn($filters[ "language" ]);
 		}
 
@@ -230,9 +244,13 @@ class PostEx extends Post
 	 *
 	 * @return Post|array|null
 	 */
-	public static function getOneWithTranslations ( $postId )
+	public static function getOneWithTranslations($postId)
 	{
-		return self::find()->id($postId)->withTranslations()->one();
+		return self::find()
+						->id($postId)
+						->withTranslations()
+						->with("postLinks")
+						->one();
 	}
 
 	/**
@@ -242,7 +260,7 @@ class PostEx extends Post
 	 *
 	 * @return array
 	 */
-	public static function updateWithTranslations ( $postId, $post, $translations )
+	public static function updateWithTranslations($postId,$post,$translations)
 	{
 		//  start a transaction to rollback at any moment if there is a problem
 		$transaction = self::$db->beginTransaction();

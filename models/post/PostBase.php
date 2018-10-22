@@ -29,6 +29,7 @@ use Yii;
  * @property PostStatus    $postStatus
  * @property PostLang[]    $postLangs
  * @property Lang[]        $langs
+ * @property PostLink[]    $postLinks
  */
 abstract class PostBase extends \yii\db\ActiveRecord
 {
@@ -41,6 +42,7 @@ abstract class PostBase extends \yii\db\ActiveRecord
 	const ERROR   = 0;
 	const SUCCESS = 1;
 
+	//	possible error messages
 	const ERR_ON_SAVE             = "ERR_ON_SAVE";
 	const ERR_ON_DELETE           = "ERR_ON_DELETE";
 	const ERR_NOT_FOUND           = "ERR_NOT_FOUND";
@@ -50,6 +52,7 @@ abstract class PostBase extends \yii\db\ActiveRecord
 	const ERR_MISSING_TRANSLATION = "ERR_MISSING_TRANSLATION_ON_PUBLISHED";
 	const ERR_POST_DELETE_COMMENTS = "ERR_POST_DELETE_COMMENTS";
 
+	//	possible error messages used by rules
 	const ERR_FIELD_REQUIRED    = "ERR_FIELD_VALUE_REQUIRED";
 	const ERR_FIELD_TYPE        = "ERR_FIELD_VALUE_WRONG_TYPE";
 	const ERR_FIELD_NOT_FOUND   = "ERR_FIELD_VALUE_NOT_FOUND";
@@ -156,6 +159,12 @@ abstract class PostBase extends \yii\db\ActiveRecord
 		            ->viaTable('post_lang', [ 'post_id' => 'id' ]);
 	}
 
+	/** @return \yii\db\ActiveQuery	 */
+	public function getPostLinks ()
+	{
+		return $this->hasMany(PostLink::className, [ 'post_id', 'id' ]);
+	}
+
 	/**
 	 * @inheritdoc
 	 * @return PostQuery the active query used by this AR class.
@@ -224,7 +233,7 @@ abstract class PostBase extends \yii\db\ActiveRecord
 	}
 
 	/**
-	 *
+	 * This will save the database connection so it can be easily used by the model.
 	 */
 	public static function defineDbConnection () { self::$db = Yii::$app->db; }
 }
