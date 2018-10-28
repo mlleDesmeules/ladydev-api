@@ -58,4 +58,14 @@ class PostLinkTypeBase extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Post::className(), ['id' => 'post_id'])->viaTable('post_link', ['post_link_type' => 'id']);
     }
+
+    /**
+     * Verify if a specific ID exists
+     *
+     * @return bool
+     */
+    public static function idExists($id)
+    {
+        return self::find()->andWhere([ "id" => $id ])->exists();
+    }
 }

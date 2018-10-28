@@ -2,6 +2,7 @@
 
 namespace app\models\post;
 
+use app\helpers\ArrayHelperEx;
 use Yii;
 
 /**
@@ -17,22 +18,52 @@ use Yii;
  */
 abstract class PostLinkBase extends \yii\db\ActiveRecord
 {
+    const ERROR   = 0;
+    const SUCCESS = 1;
+
+    // possibe error messages
+    const ERR_LINK_EXISTS         = "ERR_LINK_ALREADY_EXISTS";
+    const ERR_POST_NOT_FOUND      = "ERR_POST_NOT_FOUND";
+    const ERR_LINK_TYPE_NOT_FOUND = "ERR_LINK_TYPE_NOT_FOUND";
+    const ERR_ON_SAVE             = "ERR_ON_SAVE";
+
+    //	possible error messages used by rules
+	const ERR_FIELD_REQUIRED  = "ERR_FIELD_VALUE_REQUIRED";
+	const ERR_FIELD_TYPE      = "ERR_FIELD_VALUE_WRONG_TYPE";
+	const ERR_FIELD_NOT_FOUND = "ERR_FIELD_VALUE_NOT_FOUND";
+
     /** @inheritdoc */
     public static function tableName()
     {
-        return 'post_link';
+        return "post_link";
     }
 
     /** @inheritdoc */
     public function rules()
     {
         return [
-            [['post_id', 'post_link_type', 'link'], 'required'],
-            [['post_id', 'post_link_type'], 'integer'],
-            [['link'], 'string'],
-            [['post_id', 'post_link_type'], 'unique', 'targetAttribute' => ['post_id', 'post_link_type']],
-            [['post_id'], 'exist', 'skipOnError' => true, 'targetClass' => Post::className(), 'targetAttribute' => ['post_id' => 'id']],
-            [['post_link_type'], 'exist', 'skipOnError' => true, 'targetClass' => PostLinkType::className(), 'targetAttribute' => ['post_link_type' => 'id']],
+            [ "post_id", "required", "message" => self::ERR_FIELD_REQUIRED ],
+            [ "post_id", "integer", "message" => self::ERR_FIELD_TYPE ],
+            [
+                "post_id", "exist",
+                "skipOnError" => true,
+                "targetClass" => Post::class,
+                "targetAttribute" => ["post_id" => "id"],
+            ],
+
+            [ "post_link_type", "required", "message" => self::ERR_FIELD_REQUIRED ],
+            [ "post_link_type", "integer", "message" => self::ERR_FIELD_TYPE ],
+            [
+                "post_link_type", "exist",
+                "skipOnError" => true,
+                "targetClass" => PostLinkType::class,
+                "targetAttribute" => ["post_link_type" => "id"],
+            ],
+
+            [ "link", "required", "message" => self::ERR_FIELD_REQUIRED ],
+            [ "link", "string", "message" => self::ERR_FIELD_TYPE ],
+
+            [["post_id", "post_link_type"], "unique", "targetAttribute" => ["post_id", "post_link_type"]],
         ];
     }
 
@@ -40,9 +71,9 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'post_id' => 'Post ID',
-            'post_link_type' => 'Post Link Type',
-            'link' => 'Link',
+            "post_id" => "Post ID",
+            "post_link_type" => "Post Link Type",
+            "link" => "Link",
         ];
     }
 
@@ -51,7 +82,7 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
      */
     public function getPost()
     {
-        return $this->hasOne(Post::className(), ['id' => 'post_id']);
+        return $this->hasOne(Post::className(), ["id" => "post_id"]);
     }
 
     /**
@@ -59,7 +90,7 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
      */
     public function getPostLinkType()
     {
-        return $this->hasOne(PostLinkType::className(), ['id' => 'post_link_type']);
+        return $this->hasOne(PostLinkType::className(), ["id" => "post_link_type"]);
     }
 
     /**
@@ -69,5 +100,42 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
     public static function find()
     {
         return new PostLinkQuery(get_called_class());
+    }
+
+    /**
+     * Build an array to use when returning from another method. The status will automatically
+     * set to ERROR, then $error passed in param will be associated to the error key.
+     *
+     * @param $error
+     *
+     * @return array
+     */
+    public static function buildError($error)
+    {
+        return ["status" => self::ERROR, "error" => $error];
+    }
+
+    /**
+     * Build an array to use when returning from another method. The status will be automatically
+     * set to SUCCESS, then the $params will be merged with the array and be returned.
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public static function buildSuccess($params)
+    {
+        return ArrayHelperEx::merge(["status" => self::SUCCESS], $params);
+    }
+
+    /**
+     * @param integer $postId
+     * @param integer $typeId
+     *
+     * @return boolean
+     */
+    public static function linkExists($postId, $typeId)
+    {
+        return self::find()->byPost($postId)->byType($typeId)->exists();
     }
 }
