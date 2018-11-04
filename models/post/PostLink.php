@@ -65,13 +65,36 @@ class PostLink extends PostLinkBase
         return self::buildSuccess([]);
     }
 
-    /**
-     * todo: add comment
-     * todo: implement
-     */
+	/**
+	 * @param integer $postId
+	 * @param integer $postType
+	 *
+	 * @return array
+	 * @throws ErrorException
+	 */
     public static function deleteLink($postId, $postType)
     {
+	    // if the link doesn't exists, throw an error
+	    if (!self::linkExists($postId, $postType)) {
+		    throw new ErrorException(self::ERR_LINK_NOT_EXISTS);
+	    }
 
+	    // if the post for this link is published, then throw an error
+	    if (Post::isPublished($postId)) {
+		    throw new ErrorException(Post::ERR_POST_PUBLISHED);
+	    }
+
+	    $model = self::find()->byPost($postId)->byType($postType)->one();
+
+	    try {
+		    if (!$model->delete()) {
+			    throw new ErrorException(self::ERR_ON_DELETE);
+		    }
+	    } catch (\Throwable $e) {
+		    throw new ErrorException(self::ERR_ON_DELETE);
+	    }
+
+	    return self::buildSuccess([]);
     }
 
 	/**

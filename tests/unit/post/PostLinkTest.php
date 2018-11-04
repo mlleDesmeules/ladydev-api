@@ -2,6 +2,7 @@
 
 namespace app\test\unit\post;
 
+use app\models\post\Post;
 use app\models\post\PostLink;
 use app\models\post\PostLinkType;
 use app\tests\fixtures;
@@ -177,6 +178,27 @@ class PostLinkTest extends \Codeception\Test\Unit
 		});
 		$this->specify("try to update link with invalid model");
 		$this->specify("update a post link");
+	}
+
+	public function testDeleteLink()
+	{
+		$this->specify("delete not existing post link", function () {
+			$this->tester->expectException(new ErrorException(PostLink::ERR_LINK_NOT_EXISTS), function () {
+				PostLink::deleteLink(7, PostLinkType::GITHUB);
+			});
+		});
+		$this->specify("delete published post link", function () {
+			$this->tester->expectException(new ErrorException(Post::ERR_POST_PUBLISHED), function () {
+				$link = $this->tester->grabFixture("link", "post_link3");
+
+				PostLink::deleteLink($link["post_id"], $link["post_link_type"]);
+			});
+		});
+		$this->specify("delete post link", function () {
+			$link = $this->tester->grabFixture("link", "post_link0");
+
+			PostLink::deleteLink($link["post_id"], $link["post_link_type"]);
+		});
 	}
 }
 

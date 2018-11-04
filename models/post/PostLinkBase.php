@@ -26,6 +26,7 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
     const ERR_LINK_TYPE_NOT_FOUND = "ERR_LINK_TYPE_NOT_FOUND";
     const ERR_ON_SAVE             = "ERR_ON_SAVE";
 	const ERR_LINK_NOT_EXISTS = "ERR_LINK_DOESNT_EXISTS";
+	const ERR_ON_DELETE = "ERR_ON_DELETE";
 
     //	possible error messages used by rules
 	const ERR_FIELD_REQUIRED  = "ERR_FIELD_VALUE_REQUIRED";
