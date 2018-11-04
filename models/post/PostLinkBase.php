@@ -3,7 +3,6 @@
 namespace app\models\post;
 
 use app\helpers\ArrayHelperEx;
-use Yii;
 
 /**
  * This is the model class for table "post_link".
@@ -31,6 +30,7 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
 	const ERR_FIELD_REQUIRED  = "ERR_FIELD_VALUE_REQUIRED";
 	const ERR_FIELD_TYPE      = "ERR_FIELD_VALUE_WRONG_TYPE";
 	const ERR_FIELD_NOT_FOUND = "ERR_FIELD_VALUE_NOT_FOUND";
+	const ERR_FIELD_NOT_UNIQUE = "ERR_FIELD_COMBINATION_NOT_UNIQUE";
 
     /** @inheritdoc */
     public static function tableName()
@@ -49,6 +49,7 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
                 "skipOnError" => true,
                 "targetClass" => Post::class,
                 "targetAttribute" => ["post_id" => "id"],
+	            "message" => self::ERR_FIELD_NOT_FOUND,
             ],
 
             [ "post_link_type", "required", "message" => self::ERR_FIELD_REQUIRED ],
@@ -58,12 +59,17 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
                 "skipOnError" => true,
                 "targetClass" => PostLinkType::class,
                 "targetAttribute" => ["post_link_type" => "id"],
+	            "message" => self::ERR_FIELD_NOT_FOUND,
             ],
 
             [ "link", "required", "message" => self::ERR_FIELD_REQUIRED ],
             [ "link", "string", "message" => self::ERR_FIELD_TYPE ],
 
-            [["post_id", "post_link_type"], "unique", "targetAttribute" => ["post_id", "post_link_type"]],
+	        [
+		        ["post_id", "post_link_type"], "unique",
+		        "targetAttribute" => ["post_id", "post_link_type"],
+		        "message" => self::ERR_FIELD_NOT_UNIQUE
+	        ],
         ];
     }
 
