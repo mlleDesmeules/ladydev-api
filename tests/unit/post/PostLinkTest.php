@@ -165,6 +165,19 @@ class PostLinkTest extends \Codeception\Test\Unit
 			$this->tester->assertEquals(PostLink::SUCCESS, $result["status"]);
 		});
 	}
+
+	public function testUpdateLink()
+	{
+		$this->specify("try to update not existing link", function () {
+			$this->tester->expectException(new ErrorException(PostLink::ERR_LINK_NOT_EXISTS), function () {
+				$postId = $this->tester->grabFixture("post", "post7")->id;
+
+				PostLink::updateLink($postId, PostLinkType::GITHUB, ["link" => $this->faker->url]);
+			});
+		});
+		$this->specify("try to update link with invalid model");
+		$this->specify("update a post link");
+	}
 }
 
 // EOF

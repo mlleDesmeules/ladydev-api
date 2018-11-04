@@ -18,7 +18,7 @@ class PostLink extends PostLinkBase
      *
      * This method will create a link for a specific post. It will first make sure
      * the ID passed in parameter exists, along with the post link type and that this
-     * type of link doesn't already exists. After than the link will be created.
+     * type of link doesn't already exists. After that the link will be created.
      *
      * @param integer    $postId
      * @param self|array $data
@@ -74,12 +74,43 @@ class PostLink extends PostLinkBase
 
     }
 
-    /**
-     * todo: add comment
-     * todo: implement
-     */
+	/**
+	 * Update Post Link
+	 *
+	 * This method will update a specific post link. First, a verification will be made
+	 * to make sure that the post link exists, then the model will be updated.
+	 *
+	 * @param integer $postId
+	 * @param integer $postType
+	 * @param self|array $data
+	 *
+	 * @return array
+	 * @throws yii\base\ErrorException
+	 */
     public static function updateLink($postId, $postType, $data)
     {
+	    // if the link doesn't exists, throw an error
+	    if (!self::linkExists($postId, $postType)) {
+		    throw new ErrorException(self::ERR_LINK_NOT_EXISTS);
+	    }
 
+	    // find the post link
+	    $model = self::find()->byPost($postId)->byType($postType)->one();
+
+	    $model->link = ArrayHelperEx::getValue($data, "link", $model->link);
+
+	    //  if the model isn't valid, then return all errors
+	    if (!$model->validate()) {
+		    return self::buildError($model->getErrors());
+	    }
+
+	    //  if the model couldn't be saved, then throw an error
+	    if (!$model->save()) {
+		    throw new ErrorException(self::ERR_ON_SAVE);
+	    }
+
+	    return self::buildSuccess([]);
     }
 }
+
+// EOF
