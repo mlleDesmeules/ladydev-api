@@ -75,8 +75,8 @@ return [
 		"except"     => [ "index", "view", "update", "delete" ],
 	],
 
-    //  author
-    [
+	//  author
+	[
         "class"      => 'yii\rest\UrlRule',
         "pluralize"  => false,
         "controller" => ["v1/author"],
@@ -126,6 +126,21 @@ return [
 		"prefix"     => "$admin/posts/<postId:$int>",
 		"controller" => [ "comments" => "$admin/post/comment" ],
 		"except"     => [ "view" ],
+	],
+	[
+		"class"      => 'yii\rest\UrlRule',
+		"prefix"     => "$admin/posts/<postId:$int>",
+		"controller" => [ "links" => "$admin/post/link" ],
+		"patterns"   => [
+			'GET,HEAD'            => 'index',
+			'GET,HEAD {postType}' => 'view',
+			'POST'                => 'create',
+			'PUT {postType}'      => 'update',
+			'DELETE {postType}'   => 'delete',
+			"{postType}"          => "options",
+			""                    => "options",
+		],
+		"tokens"     => [ "{postType}" => "<postType:$int>" ],
 	],
 
 	//  post statuses
