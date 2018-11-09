@@ -40,4 +40,9 @@ class PostLinkQuery extends \yii\db\ActiveQuery
     {
         return $this->andWhere([ "post_link_type" => $id ]);
     }
+
+	public function withType()
+	{
+		return $this->joinWith("postLinkType");
+	}
 }

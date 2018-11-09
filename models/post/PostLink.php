@@ -62,7 +62,7 @@ class PostLink extends PostLinkBase
             throw new ErrorException(self::ERR_ON_SAVE);
         }
 
-        return self::buildSuccess([]);
+	    return self::buildSuccess([ "post_id" => $postId, "post_link_type" => $linkType ]);
     }
 
 	/**
