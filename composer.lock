@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+      "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "20f387544b4b348c741c4e10674fa59d",
+  "content-hash": "43b5e481b5767207972befcec50f7e03",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -974,6 +974,47 @@
             "time": "2018-05-14T15:49:16+00:00"
         },
         {
+          "name": "flow/jsonpath",
+          "version": "dev-master",
+          "source": {
+            "type": "git",
+            "url": "https://github.com/FlowCommunications/JSONPath.git",
+            "reference": "2909fcad962cd933dfe392febda53eee54e81235"
+          },
+          "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/2909fcad962cd933dfe392febda53eee54e81235",
+            "reference": "2909fcad962cd933dfe392febda53eee54e81235",
+            "shasum": ""
+          },
+          "require": {
+            "php": ">=5.4.0"
+          },
+          "require-dev": {
+            "peekmo/jsonpath": "dev-master",
+            "phpunit/phpunit": "^4.0"
+          },
+          "type": "library",
+          "autoload": {
+            "psr-0": {
+              "Flow\\JSONPath": "src/",
+              "Flow\\JSONPath\\Test": "tests/"
+            }
+          },
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "MIT"
+          ],
+          "authors": [
+            {
+              "name": "Stephen Frank",
+              "email": "stephen@flowsa.com"
+            }
+          ],
+          "description": "JSONPath implementation for parsing, searching and flattening arrays",
+          "time": "2018-03-04T16:41:37+00:00"
+        },
+      {
             "name": "fzaninotto/faker",
             "version": "dev-master",
             "source": {
@@ -3408,7 +3449,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+  "stability-flags": {
+    "flow/jsonpath": 20
+  },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
