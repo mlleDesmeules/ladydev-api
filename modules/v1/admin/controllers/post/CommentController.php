@@ -3,7 +3,6 @@
 namespace app\modules\v1\admin\controllers\post;
 
 use app\modules\v1\admin\components\ControllerAdminEx;
-use app\modules\v1\admin\models\LangEx;
 use app\modules\v1\admin\models\post\PostCommentEx;
 use app\modules\v1\admin\models\post\PostEx;
 
@@ -23,7 +22,7 @@ class CommentController extends ControllerAdminEx
 	 *
 	 * @SWG\Get(
 	 *     path = "/posts/:postId/comments",
-	 *     tags = { "Posts", "Post comments" },
+	 *     tags = { "Posts", "Post Comments" },
 	 *     summary = "Get all comments linked to a post",
 	 *     description = "Get the comment tree linked to a specific post grouped by language.",
 	 *
@@ -51,7 +50,7 @@ class CommentController extends ControllerAdminEx
 	 *
 	 * @SWG\Post(
 	 *     path = "/posts/:postId/comments",
-	 *     tags = { "Posts", "Post comments" },
+	 *     tags = { "Posts", "Post Comments" },
 	 *     summary = "Create a comment",
 	 *     description = "Create a comment for a specific post and mark the author as the authenticated user",
 	 *
@@ -97,7 +96,7 @@ class CommentController extends ControllerAdminEx
 	 *
 	 * @SWG\Put(
 	 *     path = "/posts/:postId/comments/:id",
-	 *     tags = { "Posts", "Post comments" },
+	 *     tags = { "Posts", "Post Comments" },
 	 *     summary = "Update a single comment",
 	 *     description = "Update the attributes of a specific comment.",
 	 *
@@ -138,7 +137,7 @@ class CommentController extends ControllerAdminEx
 	 *
 	 * @SWG\Delete(
 	 *     path = "/posts/:postId/comments/:id",
-	 *     tags = { "Posts", "Post comments" },
+	 *     tags = { "Posts", "Post Comments" },
 	 *     summary = "Delete a single comment",
 	 *     description = "Delete a comment that doesn't have any replies.",
 	 *
