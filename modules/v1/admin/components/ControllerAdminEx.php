@@ -4,10 +4,8 @@ namespace app\modules\v1\admin\components;
 use app\helpers\ArrayHelperEx;
 use app\helpers\ParamsHelper;
 use app\modules\v1\admin\components\security\ApiClientSecurity;
-use app\modules\v1\admin\components\security\ApiTokenSecurity;
 use yii\filters\auth\HttpBasicAuth;
 use yii\rest\Controller;
-use yii\rest\OptionsAction;
 use yii\web\Request;
 use yii\web\Response;
 
@@ -95,16 +93,16 @@ class ControllerAdminEx extends Controller
 		$this->response->setStatusCode($code);
 
 		if ( is_array($error) ) {
-			return [ "error" => $error ];
+			return [ "code" => $code, "error" => $error ];
 		}
 
-		return [ "message" => $error ];
+		return [ "code" => $code, "message" => $error ];
 	}
 
 	protected function unprocessableResult ( $errors )
 	{
 		$this->response->setStatusCode(422);
 
-		return [ "error" => $errors ];
+		return [ "code" => 422, "error" => $errors ];
 	}
 }

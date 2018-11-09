@@ -14,6 +14,9 @@ use yii\web\ForbiddenHttpException;
  */
 class ApiClientSecurity extends Behavior
 {
+	const ERR_INVALID_KEY = "INVALID_API_CLIENT_KEY";
+	const ERR_MISSING_KEY = "MISSING_API_CLIENT_KEY";
+
 	/** @inheritdoc */
 	public function events ()
 	{
@@ -41,14 +44,52 @@ class ApiClientSecurity extends Behavior
 
 		//  if key isn't set, throw error
 		if ( empty($key) || is_null($key) ) {
-			throw new ForbiddenHttpException("MISSING_API_CLIENT_KEY");
+			$this->error($event, self::ERR_MISSING_KEY);
+			\Yii::$app->end();
 		}
 		
 		//  check if API Client key is valid
 		$apiClient = ApiClient::findAdminKey($key);
 		
 		if ( is_null($apiClient) ) {
-			throw new ForbiddenHttpException("INVALID_API_CLIENT_KEY");
+			$this->error($event, self::ERR_INVALID_KEY);
+			\Yii::$app->end();
 		}
 	}
+
+	/**
+	 * @param $event
+	 * @param string $error
+	 */
+	protected function error($event, $error)
+	{
+		/** @var \yii\web\Response $response */
+		$response = $event->action->controller->response;
+
+		$response->setStatusCode(403);
+		$response->data = [
+			"code"  => 403,
+			"error" => [
+				"short_message" => $error,
+				"message"       => self::getErrorMessage($error),
+			],
+		];
+	}
+
+	/**
+	 * @param string $key
+	 *
+	 * @return string
+	 */
+	private static function getErrorMessage($key)
+	{
+		$list = [
+			self::ERR_INVALID_KEY => "",
+			self::ERR_MISSING_KEY => "",
+		];
+
+		return ArrayHelperEx::getValue($list, $key, $key);
+	}
 }
+
+//  EOF
