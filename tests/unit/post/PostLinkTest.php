@@ -164,6 +164,8 @@ class PostLinkTest extends \Codeception\Test\Unit
 			$result = PostLink::createLink($postId, $data);
 
 			$this->tester->assertEquals(PostLink::SUCCESS, $result["status"]);
+			$this->tester->assertEquals($postId, $result[ "post_id" ]);
+			$this->tester->assertEquals($data[ "post_link_type" ], $result[ "post_link_type" ]);
 		});
 	}
 
@@ -176,8 +178,26 @@ class PostLinkTest extends \Codeception\Test\Unit
 				PostLink::updateLink($postId, PostLinkType::GITHUB, ["link" => $this->faker->url]);
 			});
 		});
-		$this->specify("try to update link with invalid model");
-		$this->specify("update a post link");
+
+		$this->specify("try to update link with invalid model", function () {
+			$link = $this->tester->grabFixture("link", "post_link1");
+			$data = [ "link" => 123432 ];
+
+			$result = PostLink::updateLink($link[ "post_id" ], $link[ "post_link_type" ], $data);
+
+			$this->tester->assertEquals(PostLink::ERROR, $result[ "status" ]);
+			$this->tester->assertTrue(is_array($result[ "error" ]));
+			$this->tester->assertArrayHasKey("link", $result[ "error" ]);
+		});
+
+		$this->specify("update a post link", function () {
+			$link = $this->tester->grabFixture("link", "post_link1");
+			$data = [ "link" => $this->faker->url ];
+
+			$result = PostLink::updateLink($link[ "post_id" ], $link[ "post_link_type" ], $data);
+
+			$this->tester->assertEquals(PostLink::SUCCESS, $result[ "status" ]);
+		});
 	}
 
 	public function testDeleteLink()
@@ -187,6 +207,7 @@ class PostLinkTest extends \Codeception\Test\Unit
 				PostLink::deleteLink(7, PostLinkType::GITHUB);
 			});
 		});
+
 		$this->specify("delete published post link", function () {
 			$this->tester->expectException(new ErrorException(Post::ERR_POST_PUBLISHED), function () {
 				$link = $this->tester->grabFixture("link", "post_link3");
@@ -194,6 +215,7 @@ class PostLinkTest extends \Codeception\Test\Unit
 				PostLink::deleteLink($link["post_id"], $link["post_link_type"]);
 			});
 		});
+
 		$this->specify("delete post link", function () {
 			$link = $this->tester->grabFixture("link", "post_link0");
 
