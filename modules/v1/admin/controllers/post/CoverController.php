@@ -23,16 +23,16 @@ class CoverController extends ControllerAdminEx
 	 * @throws \yii\base\Exception
 	 *
 	 * @SWG\Post(
-	 *     path    = "/posts/:postid/:langid/cover",
-	 *     tags    = { "Posts", "Cover" },
-	 *     summary = "Upload a cover for a post",
-	 *     description = "Upload a cover picture for a specific post translation",
+	 *     path   ="/posts/:postid/:langid/cover",
+	 *     tags   ={"Post Cover"},
+	 *     summary="Upload a cover for a post",
+	 *     description="Upload a cover picture for a specific post translation",
 	 *
-	 *     @SWG\Response( response = 201, description = "cover uploaded successfully", @SWG\Schema( ref = "#/definitions/Post" ), ),
-	 *     @SWG\Response( response = 401, description = "user can't be authenticated", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 422, description = "file to be uploaded is invalid", @SWG\Schema( ref = "#/definitions/UnprocessableError" ), ),
-	 *     @SWG\Response( response = 500, description = "error while uploading file", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 * )
+	 *     @SWG\Response(response=201, description="cover uploaded successfully", @SWG\Schema(ref="#/definitions/Post"),),
+	 *     @SWG\Response(response=401, description="user can't be authenticated", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *     @SWG\Response(response=422, description="file to be uploaded is invalid", @SWG\Schema(ref="#/definitions/UnprocessableError"),),
+	 *     @SWG\Response(response=500, description="error while uploading file", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *)
 	 */
 	public function actionCreate (int $postId, int $langId)
 	{
@@ -71,15 +71,16 @@ class CoverController extends ControllerAdminEx
 	 * @return PostEx
 	 *
 	 * @SWG\Delete(
-	 *     path    = "/posts/:postid/:langid/cover",
-	 *     tags    = { "Posts", "Cover" },
-	 *     summary = "Delete the existing cover",
-	 *     description = "Remove the existing cover picture for a specific post translation",
+	 *     path="/posts/:postid/:langid/cover",
+	 *     tags={"Post Cover"},
 	 *
-	 *     @SWG\Response( response = 200, description = "cover removed successfully", @SWG\Schema( ref = "#/definitions/Post" ), ),
-	 *     @SWG\Response( response = 401, description = "user can't be authenticated", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 500, description = "error while uploading file", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 * )
+	 *     summary="Delete the existing cover",
+	 *     description="Remove the existing cover picture for a specific post translation",
+	 *
+	 *     @SWG\Response(response=200, description="cover removed successfully", @SWG\Schema(ref="#/definitions/Post"),),
+	 *     @SWG\Response(response=401, description="user can't be authenticated", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *     @SWG\Response(response=500, description="error while uploading file", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *)
 	 */
 	public function actionDelete (int $postId, int $langId)
 	{

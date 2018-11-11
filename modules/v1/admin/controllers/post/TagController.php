@@ -26,16 +26,16 @@ class TagController extends ControllerAdminEx
 
 	/**
 	 * @SWG\Post(
-	 *     path = "/posts-tags",
-	 *     tags = { "Posts", "Tags" },
-	 *     summary = "Create a relation between a post and a tag",
-	 *     description = "Create a relationship entry between a post and a tag",
+	 *     path="/posts-tags",
+	 *     tags={ "Post Tags" },
+	 *     summary="Create a relation between a post and a tag",
+	 *     description="Create a relationship entry between a post and a tag",
 	 *
-	 *     @SWG\Parameter( name = "relation", in = "body", required = true, @SWG\Schema( ref = "#/definitions/PostTagRelation" ), ),
+	 *     @SWG\Parameter(name="relation", in="body", required=true, @SWG\Schema(ref="#/definitions/PostTagRelation"),),
 	 *
-	 *     @SWG\Response( response = 204, description = "Relation created" ),
-	 *     @SWG\Response( response = 404, description = "Post or Tag couldn't be found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 422, description = "Relation to be created is invalid", @SWG\Schema( ref = "#/definitions/UnprocessableError" ), ),
+	 *     @SWG\Response(response=204, description="Relation created"),
+	 *     @SWG\Response(response=404, description="Post or Tag couldn't be found", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *     @SWG\Response(response=422, description="Relation to be created is invalid", @SWG\Schema(ref="#/definitions/UnprocessableError"),),
 	 * )
 	 */
 	public function actionCreate ()
@@ -69,16 +69,16 @@ class TagController extends ControllerAdminEx
 
 	/**
 	 * @SWG\Delete(
-	 *     path = "/posts-tags",
-	 *     tags = { "Posts", "Tags" },
-	 *     summary = "Delete a relation between a post and a tag",
-	 *     description = "Delete a relationship entry between a post and a tag",
+	 *     path="/posts-tags",
+	 *     tags={ "Post Tags" },
+	 *     summary="Delete a relation between a post and a tag",
+	 *     description="Delete a relationship entry between a post and a tag",
 	 *
-	 *     @SWG\Parameter( name = "relation", in = "body", required = true, @SWG\Schema( ref = "#/definitions/PostTagRelation" ), ),
+	 *     @SWG\Parameter(name="relation", in="body", required=true, @SWG\Schema(ref="#/definitions/PostTagRelation"),),
 	 *
-	 *     @SWG\Response( response = 204, description = "Relation deleted" ),
-	 *     @SWG\Response( response = 404, description = "Relation couldn't be found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 422, description = "Relation to be deleted is invalid", @SWG\Schema( ref = "#/definitions/UnprocessableError" ), ),
+	 *     @SWG\Response(response=204, description="Relation deleted"),
+	 *     @SWG\Response(response=404, description="Relation couldn't be found", @SWG\Schema(ref="#/definitions/GeneralError"),),
+	 *     @SWG\Response(response=422, description="Relation to be deleted is invalid", @SWG\Schema(ref="#/definitions/UnprocessableError"),),
 	 * )
 	 */
 	public function actionDelete ()

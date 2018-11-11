@@ -21,16 +21,16 @@ class CommentController extends ControllerAdminEx
 	 * @return array|mixed
 	 *
 	 * @SWG\Get(
-	 *     path = "/posts/:postId/comments",
-	 *     tags = { "Posts", "Post Comments" },
-	 *     summary = "Get all comments linked to a post",
-	 *     description = "Get the comment tree linked to a specific post grouped by language.",
+	 *     path="/posts/:postId/comments",
+	 *     tags={"Post Comments"},
+	 *     summary="Get all comments linked to a post",
+	 *     description="Get the comment tree linked to a specific post grouped by language.",
 	 *
-	 *     @SWG\Parameter( name = "postId", in = "path", type = "integer", required = true, description = "Post ID for which the comments needs to be fetch." ),
+	 *     @SWG\Parameter( name="postId", in="path", type="integer", required=true, description="Post ID for which the comments needs to be fetch." ),
 	 *
-	 *     @SWG\Response( response = 200, description = "List of comments", ),
-	 *     @SWG\Response( response = 401, description = "Invalid credentials", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 404, description = "Post not found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=200, description="List of comments", ),
+	 *     @SWG\Response( response=401, description="Invalid credentials", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=404, description="Post not found", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
 	 * )
 	 */
 	public function actionIndex ( $postId )
@@ -49,18 +49,18 @@ class CommentController extends ControllerAdminEx
 	 * @throws \yii\base\InvalidConfigException
 	 *
 	 * @SWG\Post(
-	 *     path = "/posts/:postId/comments",
-	 *     tags = { "Posts", "Post Comments" },
-	 *     summary = "Create a comment",
-	 *     description = "Create a comment for a specific post and mark the author as the authenticated user",
+	 *     path="/posts/:postId/comments",
+	 *     tags={"Post Comments"},
+	 *     summary="Create a comment",
+	 *     description="Create a comment for a specific post and mark the author as the authenticated user",
 	 *
-	 *     @SWG\Parameter( name = "postId", in = "path", type = "integer", required = true, description = "Post ID for which the comment needs to be created" ),
+	 *     @SWG\Parameter( name="postId", in="path", type="integer", required=true, description="Post ID for which the comment needs to be created" ),
 	 *
-	 *     @SWG\Response( response = 200, description = "List of comments", ),
-	 *     @SWG\Response( response = 400, description = "An error occurred", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 401, description = "Invalid credentials", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 404, description = "Post not found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 422, description = "Comment couldn't be created", @SWG\Schema( ref = "#/definitions/UnprocessableError" ), ),
+	 *     @SWG\Response( response=200, description="List of comments", ),
+	 *     @SWG\Response( response=400, description="An error occurred", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=401, description="Invalid credentials", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=404, description="Post not found", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=422, description="Comment couldn't be created", @SWG\Schema( ref="#/definitions/UnprocessableError" ), ),
 	 * )
 	 */
 	public function actionCreate ( $postId )
@@ -95,19 +95,19 @@ class CommentController extends ControllerAdminEx
 	 * @throws \yii\base\InvalidConfigException
 	 *
 	 * @SWG\Put(
-	 *     path = "/posts/:postId/comments/:id",
-	 *     tags = { "Posts", "Post Comments" },
-	 *     summary = "Update a single comment",
-	 *     description = "Update the attributes of a specific comment.",
+	 *     path="/posts/:postId/comments/:id",
+	 *     tags={"Post Comments"},
+	 *     summary="Update a single comment",
+	 *     description="Update the attributes of a specific comment.",
 	 *
-	 *     @SWG\Parameter( name = "postId", in = "path", type = "integer", required = true ),
-	 *     @SWG\Parameter( name = "id", in = "path", type = "integer", required = true ),
+	 *     @SWG\Parameter( name="postId", in="path", type="integer", required=true ),
+	 *     @SWG\Parameter( name="id", in="path", type="integer", required=true ),
 	 *
-	 *     @SWG\Response( response = 200, description = "List of comments", ),
-	 *     @SWG\Response( response = 400, description = "An error occurred", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 401, description = "Invalid credentials", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 404, description = "Post not found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 422, description = "Comment couldn't be created", @SWG\Schema( ref = "#/definitions/UnprocessableError" ), ),
+	 *     @SWG\Response( response=200, description="List of comments", ),
+	 *     @SWG\Response( response=400, description="An error occurred", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=401, description="Invalid credentials", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=404, description="Post not found", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=422, description="Comment couldn't be created", @SWG\Schema( ref="#/definitions/UnprocessableError" ), ),
 	 * )
 	 */
 	public function actionUpdate ( $postId, $id )
@@ -136,18 +136,18 @@ class CommentController extends ControllerAdminEx
 	 * @return array|mixed
 	 *
 	 * @SWG\Delete(
-	 *     path = "/posts/:postId/comments/:id",
-	 *     tags = { "Posts", "Post Comments" },
-	 *     summary = "Delete a single comment",
-	 *     description = "Delete a comment that doesn't have any replies.",
+	 *     path="/posts/:postId/comments/:id",
+	 *     tags={"Post Comments"},
+	 *     summary="Delete a single comment",
+	 *     description="Delete a comment that doesn't have any replies.",
 	 *
-	 *     @SWG\Parameter( name = "postId", in = "path", type = "integer", required = true ),
-	 *     @SWG\Parameter( name = "id", in = "path", type = "integer", required = true ),
+	 *     @SWG\Parameter( name="postId", in="path", type="integer", required=true ),
+	 *     @SWG\Parameter( name="id", in="path", type="integer", required=true ),
 	 *
-	 *     @SWG\Response( response = 200, description = "List of comments", ),
-	 *     @SWG\Response( response = 400, description = "An error occurred", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 401, description = "Invalid credentials", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
-	 *     @SWG\Response( response = 404, description = "Post not found", @SWG\Schema( ref = "#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=200, description="List of comments", ),
+	 *     @SWG\Response( response=400, description="An error occurred", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=401, description="Invalid credentials", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
+	 *     @SWG\Response( response=404, description="Post not found", @SWG\Schema( ref="#/definitions/GeneralError" ), ),
 	 * )
 	 */
 	public function actionDelete ( $postId, $id )
