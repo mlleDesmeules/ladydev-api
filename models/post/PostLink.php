@@ -98,6 +98,27 @@ class PostLink extends PostLinkBase
     }
 
 	/**
+	 * @param $postId
+	 *
+	 * @return PostLinkQuery
+	 */
+	public static function getByPost($postId)
+	{
+		return self::find()->byPost($postId);
+	}
+
+	/**
+	 * @param $postId
+	 * @param $linkType
+	 *
+	 * @return PostLinkQuery
+	 */
+	public static function getByPostType($postId, $linkType)
+	{
+		return self::find()->byPost($postId)->byType($linkType);
+	}
+
+	/**
 	 * Update Post Link
 	 *
 	 * This method will update a specific post link. First, a verification will be made

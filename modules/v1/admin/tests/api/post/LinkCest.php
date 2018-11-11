@@ -69,6 +69,29 @@ class LinkCest
 		$I->wantToVerifyAuthenticationRequired("DELETE", $this->buildUrl(1000, 1000));
 	}
 
+	public function failGetAllPostIdNotFound(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$I->sendGET($this->buildUrl(1000));
+
+		$I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+		$I->seeResponseIsErrorMessage(HttpCode::NOT_FOUND, PostLinkEx::ERR_POST_NOT_FOUND);
+	}
+
+	public function successGetAll(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$I->sendGET($this->buildUrl(2));
+
+		$I->seeResponseCodeIs(HttpCode::OK);
+		$I->seeResponseIsJson();
+		$I->seeResponseMatchesJsonType($this->structure);
+	}
+
 	public function failCreatePostIdNotFound(ApiTester $I)
 	{
 		$I->wantToSetApiClient();
@@ -113,6 +136,31 @@ class LinkCest
 			"link_type" => $body[ "post_link_type" ],
 			"link"      => $body[ "link" ],
 		]);
+	}
+
+	public function failGetOneLinkNotFound(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$I->sendGET($this->buildUrl(1000, 1000));
+
+		$I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+		$I->seeResponseIsErrorMessage(HttpCode::NOT_FOUND, PostLinkEx::ERR_LINK_NOT_EXISTS);
+	}
+
+	public function successGetOne(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$link = $I->grabFixture("link", "post_link2");
+
+		$I->sendGet($this->buildUrl($link[ "post_id" ], $link[ "post_link_type" ]));
+
+		$I->seeResponseCodeIs(HttpCode::OK);
+		$I->seeResponseIsJson();
+		$I->seeResponseMatchesJsonType($this->structure);
 	}
 
 	public function failUpdateLinkNotFound(ApiTester $I)

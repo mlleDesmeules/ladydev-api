@@ -10,6 +10,8 @@ use yii\base\ErrorException;
  * class PostLinkEx
  *
  * @package app\models\v1\admin\models\post
+ *
+ * @SWG\Definition(definition="PostLinkList", type="array", @SWG\Items(ref="#/definitions/PostLink"))
  */
 class PostLinkEx extends PostLink
 {
@@ -91,6 +93,29 @@ class PostLinkEx extends PostLink
 	}
 
 	/**
+	 * @param $postId
+	 *
+	 * @return self[]|array
+	 */
+	public static function getByPost($postId)
+	{
+		return parent::getByPost($postId)->withType()->all();
+	}
+
+	/**
+	 * @param int $postId
+	 * @param int $linkType
+	 *
+	 * @return self
+	 */
+	public static function getByPostType($postId, $linkType)
+	{
+		return parent::getByPostType($postId, $linkType)
+		             ->withType()
+		             ->one();
+	}
+
+	/**
 	 * Get Error Message
 	 *
 	 * @param string $key
@@ -112,20 +137,6 @@ class PostLinkEx extends PostLink
 		];
 
 		return ArrayHelperEx::getValue($list, $key, $key);
-	}
-
-	/**
-	 * @param $postId
-	 * @param $linkType
-	 *
-	 * @return PostLink|array|null
-	 */
-	public static function getLink($postId, $linkType)
-	{
-		return self::find()->byPost($postId)
-		           ->byType($linkType)
-		           ->withType()
-		           ->one();
 	}
 
 	/**

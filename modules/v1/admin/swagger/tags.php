@@ -32,22 +32,8 @@ namespace app\modules\v1\admin\swagger;
 
 /**
  * @SWG\Tag(
- *    name = "Posts",
- *    description = "All endpoints managing posts",
- * )
- */
-
-/**
- * @SWG\Tag(
- *    name = "Cover",
- *    description = "All endpoints managing a post cover picture",
- * )
- */
-
-/**
- * @SWG\Tag(
- *    name = "Post Comments",
- *    description = "All endpoints managing comments",
+ *    name = "Tags",
+ *    description = "All endpoints managing tags",
  * )
  */
 
@@ -60,7 +46,35 @@ namespace app\modules\v1\admin\swagger;
 
 /**
  * @SWG\Tag(
- *    name = "Tags",
- *    description = "All endpoints managing post tags",
+ *    name = "Posts",
+ *    description = "All endpoints managing posts",
+ * )
+ */
+
+/**
+ * @SWG\Tag(
+ *    name = "Post Cover",
+ *    description = "All endpoints managing a post cover picture",
+ * )
+ */
+
+/**
+ * @SWG\Tag(
+ *     name="Post Tags",
+ *     description="All endpoints managing post tags relation"
+ * )
+ */
+
+/**
+ * @SWG\Tag(
+ *     name="Post Links",
+ *     description="All endpoints managing a post link",
+ * )
+ */
+
+/**
+ * @SWG\Tag(
+ *    name = "Post Comments",
+ *    description = "All endpoints managing comments",
  * )
  */

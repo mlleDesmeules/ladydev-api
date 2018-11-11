@@ -28,17 +28,86 @@ class LinkController extends ControllerAdminEx
 		];
 	}
 
+	/**
+	 * Get All
+	 *
+	 * This method will get all links for a specific post. First, a verification will be made
+	 * to make sure the post ID passed exists in the database, then all links for this post
+	 * will be returned.
+	 *
+	 * @param int $postId
+	 *
+	 * @return PostLinkEx[]|array
+	 *
+	 * @SWG\Get(
+	 *     path="posts/:postId/links",
+	 *     tags={"Post Links"},
+	 *
+	 *     summary="Get all post links",
+	 *     description="Get all post links for a specific post, if it exists",
+	 *
+	 *     @SWG\Parameter(name="postId", in="path", type="integer", required=true),
+	 *
+	 *     @SWG\Response(response=200, description="all post links", @SWG\Schema(ref="#/definitions/PostLinkList")),
+	 *     @SWG\Response(response=401, description="user can't be authenticated",
+	 *                                 @SWG\Schema(ref="#/definitions/GeneralError")),
+	 *     @SWG\Response(response=404, description="post or link type not found",
+	 *                                 @SWG\Schema(ref="#/definitions/GeneralError")),
+	 *     @SWG\Response(response=500, description="server error", @SWG\Schema(ref="#/definitions/GeneralError")),
+	 * )
+	 */
 	public function actionIndex($postId)
 	{
-		var_dump($postId);
-		die();
+		//  return error if the post wasn't found
+		if (!PostEx::idExists($postId)) {
+			return $this->error(404, [
+				"short_message" => PostLinkEx::ERR_POST_NOT_FOUND,
+				"message"       => PostLinkEx::getErrorMessage(PostLinkEx::ERR_POST_NOT_FOUND),
+			]);
+		}
+
+		return PostLinkEx::getByPost($postId);
 	}
 
-	public function actionView($postId, $postType)
+	/**
+	 * Get One
+	 *
+	 * This method will find a specific post link, it will first verify if the post ID and link type
+	 * combination exists and return an error if it doesn't.
+	 *
+	 * @param int $postId
+	 * @param int $linkType
+	 *
+	 * @return PostLinkEx|array
+	 *
+	 * @SWG\Get(
+	 *     path="posts/:postId/links/:linkType",
+	 *     tags={"Post Links"},
+	 *
+	 *     summary="Get one post link",
+	 *     description="Get a specific post link, if it exists",
+	 *
+	 *     @SWG\Parameter(name="postId", in="path", type="integer", required=true),
+	 *     @SWG\Parameter(name="linkType", in="path", type="integer", required=true),
+	 *
+	 *     @SWG\Response(response=200, description="post link", @SWG\Schema(ref="#/definitions/PostLink")),
+	 *     @SWG\Response(response=401, description="user can't be authenticated",
+	 *                                 @SWG\Schema(ref="#/definitions/GeneralError")),
+	 *     @SWG\Response(response=404, description="post or link type not found",
+	 *                                 @SWG\Schema(ref="#/definitions/GeneralError")),
+	 *     @SWG\Response(response=500, description="server error", @SWG\Schema(ref="#/definitions/GeneralError")),
+	 * )
+	 */
+	public function actionView($postId, $linkType)
 	{
-		var_dump($postId);
-		var_dump($postType);
-		die();
+		if (!PostLinkEx::linkExists($postId, $linkType)) {
+			return $this->error(404, [
+				"short_message" => PostLinkEx::ERR_LINK_NOT_EXISTS,
+				"message"       => PostLinkEx::getErrorMessage(PostLinkEx::ERR_LINK_NOT_EXISTS),
+			]);
+		}
+
+		return PostLinkEx::getByPostType($postId, $linkType);
 	}
 
 	/**
@@ -55,7 +124,7 @@ class LinkController extends ControllerAdminEx
 	 *
 	 * @SWG\Post(
 	 *     path="posts/:postId/links",
-	 *     tags={"Posts", "Post Links"},
+	 *     tags={"Post Links"},
 	 *
 	 *     summary="Create a post link",
 	 *     description="Create a link for a specific post",
@@ -95,7 +164,7 @@ class LinkController extends ControllerAdminEx
 		}
 
 		// returned the updated complete post
-		return $this->createdResult(PostLinkEx::getLink($result[ "post_id" ], $result[ "post_link_type" ]));
+		return $this->createdResult(PostLinkEx::getByPostType($result[ "post_id" ], $result[ "post_link_type" ]));
 	}
 
 	/**
@@ -113,7 +182,7 @@ class LinkController extends ControllerAdminEx
 	 *
 	 * @SWG\Put(
 	 *     path="posts/:postId/links/:linkType",
-	 *     tags={"Posts", "Post Links"},
+	 *     tags={"Post Links"},
 	 *
 	 *     summary="Update a post link",
 	 *     description="Update a existing link for a given post",
@@ -157,7 +226,7 @@ class LinkController extends ControllerAdminEx
 		//  return updated post link
 		$this->response->setStatusCode(200);
 
-		return PostLinkEx::getLink($postId, $linkType);
+		return PostLinkEx::getByPostType($postId, $linkType);
 	}
 
 	/**
