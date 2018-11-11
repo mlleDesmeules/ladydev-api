@@ -28,7 +28,7 @@ return [
 		"@tests"  => "/app/tests",
 	],
 
-	// set target language to be Russian
+	// set target language to be English
 	'language'       => 'en-CA',
 
 	// set source language to be English
@@ -78,18 +78,13 @@ return [
 				/** @var \yii\web\Response $response */
 				$response = $event->sender;
 
-				if ( !is_null($response->data) ) {
-					if ( !$response->getIsSuccessful() && array_key_exists("message", $response->data) ) {
-						$response->data = [
-							"code"    => $response->getStatusCode(),
-							"message" => $response->data[ "message" ],
-						];
-					} else if ( !$response->getIsSuccessful() ) {
-						$response->data = [
-							"code"  => $response->getStatusCode(),
-							"error" => $response->data,
-						];
-					}
+				if (\Yii::$app->getErrorHandler()->exception) {
+					/** @var \yii\base\Exception $exception */
+					$exception      = \Yii::$app->getErrorHandler()->exception;
+					$response->data = [
+						"code"    => $exception->statusCode,
+						"message" => $exception->getMessage(),
+					];
 				}
 			},
 		],

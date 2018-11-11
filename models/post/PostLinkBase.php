@@ -48,30 +48,39 @@ abstract class PostLinkBase extends \yii\db\ActiveRecord
             [ "post_id", "required", "message" => self::ERR_FIELD_REQUIRED ],
             [ "post_id", "integer", "message" => self::ERR_FIELD_TYPE ],
             [
-                "post_id", "exist",
-                "skipOnError" => true,
-                "targetClass" => Post::class,
-                "targetAttribute" => ["post_id" => "id"],
-	            "message" => self::ERR_FIELD_NOT_FOUND,
+	            "post_id", "exist",
+	            "skipOnError"     => true,
+	            "targetClass"     => Post::class,
+	            "targetAttribute" => [ "post_id" => "id" ],
+	            "message"         => self::ERR_FIELD_NOT_FOUND,
             ],
 
             [ "post_link_type", "required", "message" => self::ERR_FIELD_REQUIRED ],
             [ "post_link_type", "integer", "message" => self::ERR_FIELD_TYPE ],
             [
-                "post_link_type", "exist",
-                "skipOnError" => true,
-                "targetClass" => PostLinkType::class,
-                "targetAttribute" => ["post_link_type" => "id"],
-	            "message" => self::ERR_FIELD_NOT_FOUND,
+	            "post_link_type", "exist",
+	            "skipOnError"     => true,
+	            "targetClass"     => PostLinkType::class,
+	            "targetAttribute" => [ "post_link_type" => "id" ],
+	            "message"         => self::ERR_FIELD_NOT_FOUND,
             ],
 
             [ "link", "required", "message" => self::ERR_FIELD_REQUIRED ],
             [ "link", "string", "message" => self::ERR_FIELD_TYPE ],
 
 	        [
-		        ["post_id", "post_link_type"], "unique",
-		        "targetAttribute" => ["post_id", "post_link_type"],
-		        "message" => self::ERR_FIELD_NOT_UNIQUE
+	            "post_link_type",
+	            "unique",
+	            "targetAttribute" => ["post_id", "post_link_type"],
+	            "message"         => self::ERR_FIELD_NOT_UNIQUE,
+	            "when"            => function (self $model, string $attribute) {
+		            $found = self::find()
+		                         ->byPost($model->post_id)
+		                         ->andWhere([ $attribute => $model->$attribute ])
+		                         ->one();
+
+		            return ($found) ? ((int)$model->post_id !== (int)$found->post_id) : true;
+	            },
 	        ],
         ];
     }

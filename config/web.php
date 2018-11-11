@@ -82,30 +82,6 @@ $config = [
 			'showScriptName'      => false,
 			'rules'               => $rules,
 		],
-		//  Comment whole response block to use Gii
-		"response"   => [
-			"class"         => \yii\web\Response::className(),
-			"on beforeSend" => function ( $event ) {
-				/** @var \yii\web\Response $response */
-				$response = $event->sender;
-
-				if ( !is_null($response->data) ) {
-					if (!$response->getIsSuccessful()) {
-						$data = [ "code" => $response->getStatusCode(), ];
-
-						if (isset($response->data[ "error" ])) {
-							$data[ "error" ] = $response->data[ "error" ];
-						}
-
-						if (isset($response->data[ "message" ])) {
-							$data[ "message" ] = $response->data[ "message" ];
-						}
-
-						$response->data = $data;
-					}
-				}
-			},
-		],
 	],
 	'params'     => $params,
 ];

@@ -133,14 +133,14 @@ return [
 		"controller" => [ "links" => "$admin/post/link" ],
 		"patterns"   => [
 			'GET,HEAD'            => 'index',
-			'GET,HEAD {postType}' => 'view',
+			'GET,HEAD {linkType}' => 'view',
 			'POST'                => 'create',
-			'PUT {postType}'      => 'update',
-			'DELETE {postType}'   => 'delete',
-			"{postType}"          => "options",
+			'PUT {linkType}'      => 'update',
+			'DELETE {linkType}'   => 'delete',
+			"{linkType}"          => "options",
 			""                    => "options",
 		],
-		"tokens"     => [ "{postType}" => "<postType:$int>" ],
+		"tokens"     => [ "{linkType}" => "<linkType:$int>" ],
 	],
 
 	//  post statuses

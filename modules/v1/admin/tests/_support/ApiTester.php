@@ -20,6 +20,15 @@ class ApiTester extends \Codeception\Actor
 {
 	use _generated\ApiTesterActions;
 
+	/** @var array */
+	public $errorStructure = [
+		"code"  => "integer",
+		"error" => [
+			"short_message" => "string",
+			"message"       => "string",
+		],
+	];
+
 	/**
 	 *
 	 */
@@ -46,7 +55,14 @@ class ApiTester extends \Codeception\Actor
 		$this->{ "send$action" }( $url );
 
 		$this->seeResponseCodeIs(\Codeception\Util\HttpCode::FORBIDDEN);
-		$this->seeResponseContainsJson([ "code" => 403, "message" => "MISSING_API_CLIENT_KEY" ]);
+		$this->seeResponseMatchesJsonType($this->errorStructure);
+		$this->seeResponseContainsJson([
+			"code"  => 403,
+			"error" => [
+				"short_message" => "MISSING_API_CLIENT_KEY",
+				"message"       => "",
+			],
+		]);
 	}
 
 	public function wantToVerifyAuthenticationRequired ($action, $url)
@@ -56,5 +72,28 @@ class ApiTester extends \Codeception\Actor
 
 		$this->seeResponseCodeIs(\Codeception\Util\HttpCode::UNAUTHORIZED);
 		$this->seeResponseContainsJson([ "code" => 401, "message" => "Your request was made with invalid credentials." ]);
+	}
+
+	/**
+	 * @param integer $code
+	 * @param string $error
+	 */
+	public function seeResponseIsErrorMessage($code, $error)
+	{
+		$this->seeResponseIsJson();
+		$this->seeResponseMatchesJsonType($this->errorStructure);
+		$this->seeResponseContainsJson([
+			"code"  => $code,
+			"error" => [ "short_message" => $error ],
+		]);
+	}
+
+	public function seeResponseContainsFormError($attribute, $error)
+	{
+		$this->seeResponseContainsJson([
+			"error" => [
+				"form_errors" => [ $attribute => [ $error ], ],
+			],
+		]);
 	}
 }

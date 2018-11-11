@@ -49,6 +49,47 @@ class PostLinkEx extends PostLink
 		return parent::rules();
 	}
 
+	public static function buildFormError($errors, $withStatus = false)
+	{
+		$result = self::buildError([
+			"short_message" => self::ERR_MODEL_INVALID,
+			"message"       => self::getErrorMessage(self::ERR_MODEL_INVALID),
+			"form_errors"   => $errors,
+		]);
+
+		return ($withStatus) ? $result : $result[ "error" ];
+	}
+
+	/**
+	 * Create Link
+	 *
+	 * This method will create the post link itself, then handle and process the error
+	 * result to be returned by the API.
+	 *
+	 * @param int $postId
+	 * @param self|array $data
+	 *
+	 * @return array
+	 */
+	public static function createLink($postId, $data)
+	{
+		try {
+			$result = parent::createLink($postId, $data);
+
+			if ($result[ "status" ] === PostLinkEx::ERROR) {
+				$result = self::buildFormError($result[ "error" ], true);
+			}
+
+		} catch (ErrorException $e) {
+			$result = self::buildError([
+				"message"       => self::getErrorMessage($e->getMessage()),
+				"short_message" => $e->getMessage(),
+			]);
+		}
+
+		return $result;
+	}
+
 	/**
 	 * Get Error Message
 	 *
@@ -73,47 +114,6 @@ class PostLinkEx extends PostLink
 		return ArrayHelperEx::getValue($list, $key, $key);
 	}
 
-	public static function buildFormError($errors, $withStatus = false)
-	{
-		$result = self::buildError([
-			"short_message" => self::ERR_MODEL_INVALID,
-			"message"       => self::getErrorMessage(self::ERR_MODEL_INVALID),
-			"form_errors"   => $errors,
-		]);
-
-		return ($withStatus) ? $result : $result[ "error" ];
-	}
-
-	/**
-	 * Create Link
-	 *
-	 * This method will create the post link itself, then handle and process the error
-	 * result to be returned by the API.
-	 *
-	 * @param int $postId
-	 * @param PostLink|array $data
-	 *
-	 * @return array
-	 */
-	public static function createLink($postId, $data)
-	{
-		try {
-			$result = parent::createLink($postId, $data);
-
-			if ($result[ "status" ] === PostLinkEx::ERROR) {
-				$result = self::buildFormError($result[ "error" ], true);
-			}
-
-		} catch (ErrorException $e) {
-			$result = self::buildError([
-				"message"       => self::getErrorMessage($e->getMessage()),
-				"short_message" => $e->getMessage(),
-			]);
-		}
-
-		return $result;
-	}
-
 	/**
 	 * @param $postId
 	 * @param $linkType
@@ -126,6 +126,37 @@ class PostLinkEx extends PostLink
 		           ->byType($linkType)
 		           ->withType()
 		           ->one();
+	}
+
+	/**
+	 * Update Link
+	 *
+	 * This method will call the parent method to update the post link and
+	 * catch any exception thrown. Then transform them into an error array
+	 * and return it.
+	 *
+	 * @param int $postId
+	 * @param int $postType
+	 * @param self|array $data
+	 *
+	 * @return array
+	 */
+	public static function updateLink($postId, $postType, $data)
+	{
+		try {
+			$result = parent::updateLink($postId, $postType, $data);
+
+			if ($result[ "status" ] === PostLinkEx::ERROR) {
+				$result = self::buildFormError($result[ "error" ], true);
+			}
+		} catch (ErrorException $e) {
+			$result = self::buildError([
+				"message"       => self::getErrorMessage($e->getMessage()),
+				"short_message" => $e->getMessage(),
+			]);
+		}
+
+		return $result;
 	}
 }
 
