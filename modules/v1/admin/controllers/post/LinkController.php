@@ -233,11 +233,23 @@ class LinkController extends ControllerAdminEx
 	 * todo: implement update
 	 * todo: add comment
 	 */
-	public function actionDelete($postId, $postType)
+	public function actionDelete($postId, $linkType)
 	{
-		var_dump($postId);
-		var_dump($postType);
-		die();
+		//  return error if the post link doesn't exists
+		if (!PostLinkEx::linkExists($postId, $linkType)) {
+			return $this->error(404, [
+				"short_message" => PostLinkEx::ERR_LINK_NOT_EXISTS,
+				"message"       => PostLinkEx::getErrorMessage(PostLinkEx::ERR_LINK_NOT_EXISTS),
+			]);
+		}
+
+		$result = PostLinkEx::deleteLink($postId, $linkType);
+
+		if ($result[ "status" ] === PostLinkEx::ERROR) {
+			return $this->handleErrors($result[ "error" ]);
+		}
+
+		return $this->emptySuccess();
 	}
 
 	/**
@@ -279,6 +291,9 @@ class LinkController extends ControllerAdminEx
 	private function handleErrors($error)
 	{
 		switch ($error[ "short_message" ]) {
+			case PostEx::ERR_POST_PUBLISHED:
+				return $this->error(400, $error);
+
 			case PostLinkEx::ERR_POST_NOT_FOUND:
 				// no break
 			case PostLinkEx::ERR_LINK_TYPE_NOT_FOUND:
@@ -294,3 +309,5 @@ class LinkController extends ControllerAdminEx
 		}
 	}
 }
+
+//  EOF

@@ -93,6 +93,26 @@ class PostLinkEx extends PostLink
 	}
 
 	/**
+	 * @param int $postId
+	 * @param int $postType
+	 *
+	 * @return array
+	 */
+	public static function deleteLink($postId, $postType)
+	{
+		try {
+			$result = parent::deleteLink($postId, $postType);
+		} catch (ErrorException $e) {
+			$result = self::buildError([
+				"message"       => self::getErrorMessage($e->getMessage()),
+				"short_message" => $e->getMessage(),
+			]);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @param $postId
 	 *
 	 * @return self[]|array

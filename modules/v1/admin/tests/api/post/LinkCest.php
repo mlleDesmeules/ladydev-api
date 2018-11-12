@@ -208,4 +208,40 @@ class LinkCest
 			"link"      => $body[ "link" ],
 		]);
 	}
+
+	public function failDeleteLinkNotFound(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$I->sendDELETE($this->buildUrl(1000, 1000), []);
+
+		$I->seeResponseCodeIs(HttpCode::NOT_FOUND);
+		$I->seeResponseIsErrorMessage(HttpCode::NOT_FOUND, PostLinkEx::ERR_LINK_NOT_EXISTS);
+	}
+
+	public function failDeletePublishedPost(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$link = $I->grabFixture("link", "post_link3");
+
+		$I->sendDELETE($this->buildUrl($link[ "post_id" ], $link[ "post_link_type" ]));
+
+		$I->seeResponseCodeIs(HttpCode::BAD_REQUEST);
+		$I->seeResponseIsErrorMessage(HttpCode::BAD_REQUEST, \app\modules\v1\models\post\PostEx::ERR_POST_PUBLISHED);
+	}
+
+	public function successDelete(ApiTester $I)
+	{
+		$I->wantToSetApiClient();
+		$I->wantToBeAuthenticated();
+
+		$link = $I->grabFixture("link", "post_link1");
+
+		$I->sendDELETE($this->buildUrl($link[ "post_id" ], $link[ "post_link_type" ]));
+
+		$I->seeResponseCodeIs(HttpCode::NO_CONTENT);
+	}
 }
