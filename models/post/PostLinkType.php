@@ -12,4 +12,12 @@ use Yii;
 class PostLinkType extends PostLinkTypeBase
 {
     const GITHUB = 1;
+
+	/**
+	 * @return PostLinkType[]|array
+	 */
+	public static function getAllEnabled()
+	{
+		return self::find()->isEnabled()->all();
+	}
 }

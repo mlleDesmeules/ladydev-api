@@ -18,6 +18,9 @@ use Yii;
  */
 class PostLinkTypeBase extends \yii\db\ActiveRecord
 {
+	const DISABLED = 0;
+	const ENABLED  = 1;
+
     /** @inheritdoc */
     public static function tableName() { return 'post_link_type'; }
 
@@ -58,6 +61,15 @@ class PostLinkTypeBase extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Post::className(), ['id' => 'post_id'])->viaTable('post_link', ['post_link_type' => 'id']);
     }
+
+	/**
+	 * @inheritdoc
+	 * @return PostLinkTypeQuery    the active query used by this AR class
+	 */
+	public static function find()
+	{
+		return new PostLinkTypeQuery(get_called_class());
+	}
 
     /**
      * Verify if a specific ID exists

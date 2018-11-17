@@ -150,6 +150,13 @@ return [
 		"except"     => [ "view", "create", "update", "delete" ],
 	],
 
+	//  post links
+	[
+		"class"      => 'yii\rest\UrlRule',
+		"controller" => [ "$admin/post-links/types" => "$admin/post/link-type" ],
+		"except"     => [ "view", "create", "update", "delete" ],
+	],
+
 	//  tags
 	[
 		"class"      => 'yii\rest\UrlRule',
