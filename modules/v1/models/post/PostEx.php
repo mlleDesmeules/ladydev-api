@@ -123,14 +123,6 @@ class PostEx extends Post
                      ->isPublished()
                      ->withTranslationIn(LangEx::getIdFromIcu(\Yii::$app->language))
                      ->joinWith([ "postLang" => function (PostLangQuery $query) use ($filters) {
-	                     $query->select([
-		                     "title",
-		                     "slug",
-		                     "summary",
-		                     "content",
-		                     "file_alt",
-	                     ]);
-
                          if (!is_null($filters[ "search" ])) {
                              $query->search($filters[ "search" ], PostLangEx::$searchFields);
                          }

@@ -15,7 +15,7 @@ class PostLangEx extends PostLang
 	/** @inheritdoc */
 	public function getUser ()
 	{
-		return $this->hasOne(UserEx::className(), [ "id" => "user_id" ]);
+		return $this->hasOne(UserEx::class, [ "id" => "user_id" ]);
 	}
 
 	/** @inheritdoc */
