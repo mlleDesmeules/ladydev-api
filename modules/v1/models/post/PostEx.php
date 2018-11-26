@@ -25,24 +25,52 @@ class PostEx extends Post
 	/** @return PostLangQuery */
 	public function getPostLang ()
 	{
-		return $this->hasOne(PostLangEx::className(), [ "post_id" => "id" ])
+		return $this->hasOne(PostLangEx::class, [ "post_id" => "id" ])
 		            ->byLang(LangEx::getIdFromIcu(\Yii::$app->language));
 	}
 
 	/** @inheritdoc */
 	public function getCategory ()
 	{
-		return $this->hasOne(CategoryEx::className(), [ "id"  => "category_id" ]);
+		return $this->hasOne(CategoryEx::class, [ "id" => "category_id" ]);
 	}
 
 	/** @inheritdoc */
 	public function getTags ()
 	{
-		return $this->hasMany(TagEx::className(), [ 'id' => 'tag_id' ])
+		return $this->hasMany(TagEx::class, [ 'id' => 'tag_id' ])
 		            ->viaTable('asso_tag_post', [ 'post_id' => 'id' ]);
 	}
 
-	/** @inheritdoc */
+	/**
+	 * @inheritdoc
+	 *
+	 * @SWG\Definition(
+	 *     definition="PostLinks",
+	 *     type="array",
+	 *
+	 *     @SWG\Items(ref="#/definitions/PostLink"),
+	 * )
+	 */
+	public function getPostLinks()
+	{
+		return $this->hasMany(PostLinkEx::class, [ "post_id" => "id" ]);
+	}
+
+	/**
+	 * @inheritdoc
+	 *
+	 * @SWG\Definition(
+	 *     definition="Post",
+	 *
+	 *     @SWG\Property(property="id", type="integer", description="Post unique identifier"),
+	 *     @SWG\Property(property="featured", type="integer", description="FLAG - if the post is marked featured"),
+	 *     @SWG\Property(property="comment_enabled", type="integer", description="FLAG - if the post accepts comments"),
+	 *     @SWG\Property(property="title", type="string", description="Post Title"),
+	 *     @SWG\Property(property="slug", type="string", description="Post slug - to use for URLs"),
+	 *     @SWG\Property(property="summary", type="string", description="Summary of the content of the post"),
+	 * )
+	 */
 	public function fields ()
 	{
 		$fields = [
@@ -75,6 +103,7 @@ class PostEx extends Post
 						];
 					},
 					"tags",
+					"links"    => "postLinks",
 				]);
 
 			case self::SCENARIO_DEFAULT :
@@ -94,6 +123,14 @@ class PostEx extends Post
                      ->isPublished()
                      ->withTranslationIn(LangEx::getIdFromIcu(\Yii::$app->language))
                      ->joinWith([ "postLang" => function (PostLangQuery $query) use ($filters) {
+	                     $query->select([
+		                     "title",
+		                     "slug",
+		                     "summary",
+		                     "content",
+		                     "file_alt",
+	                     ]);
+
                          if (!is_null($filters[ "search" ])) {
                              $query->search($filters[ "search" ], PostLangEx::$searchFields);
                          }
