@@ -15,6 +15,13 @@ use app\modules\v1\models\LangEx;
  */
 class UserProfileEx extends UserProfile
 {
+	/** @inheritdoc */
+	public function getProfileLang()
+	{
+		return $this->hasOne(UserProfileLang::class, [ "user_id" => "user_id" ])
+		            ->andWhere([ "lang_id" => LangEx::getIdFromIcu(\Yii::$app->language) ]);
+	}
+
     /** @inheritdoc */
     public function fields()
     {
